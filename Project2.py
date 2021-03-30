@@ -1,3 +1,6 @@
+#Name: Chris Hudson
+#U-M ID: 16222729
+
 from bs4 import BeautifulSoup
 import requests
 import re
@@ -14,9 +17,14 @@ def get_titles_from_search_results(filename):
 
     [('Book title 1', 'Author 1'), ('Book title 2', 'Author 2')...]
     """
+    link = filename
+    rsp = requests.get(link)
+    soup = BeautifulSoup(rsp.content, 'html.parser')
+    aths = soup.find_all('a', class_="authorName")
+    titles = soup.find_all('a', class_="bookTitle")
 
-    pass
-
+    new_Auth = []
+    new_Tls = []
 
 def get_search_links():
     """
