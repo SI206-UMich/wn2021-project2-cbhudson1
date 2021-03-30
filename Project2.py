@@ -23,8 +23,14 @@ def get_titles_from_search_results(filename):
     aths = soup.find_all('a', class_="authorName")
     titles = soup.find_all('a', class_="bookTitle")
 
-    new_Auth = []
-    new_Tls = []
+    new_Authors = []
+    new_Titles = []
+    for element in titles:
+        new_Titles.append(element.strip())
+    for element in aths:
+        new_Authors.append(element.strip())
+    lst1 = list(zip(new_Titles, new_Authors))
+    return lst1
 
 def get_search_links():
     """
@@ -39,8 +45,11 @@ def get_search_links():
     “https://www.goodreads.com/book/show/kdkd".
 
     """
-
-    pass
+    web_link = 'https://www.goodreads.com/search?q=fantasy&qid=NwUsLiA2Nc'
+    b = requests.get(web_link)
+    soup = BeautifulSoup(b.content, 'html.parser')
+    link_lst = []
+    
 
 
 def get_book_summary(book_url):
