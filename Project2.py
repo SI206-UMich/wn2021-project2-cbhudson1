@@ -21,8 +21,18 @@ def get_titles_from_search_results(filename):
     #Get titles code start
     with open(filename) as a:
         soup = BeautifulSoup(a, 'html.parser')
-    #Tuple for books
-    bk = soup.find_all('a')
+    #For books and authors
+    bk = soup.find_all('a', class_='bookTitle')
+    bk_lst = []
+    athr_nme = soup.find_all('a', class_='authorName')
+    nme_lst = []
+    #For loops
+    for a in bk:
+        bk_lst.append(a.text.strip())
+    for a in athr_nme:
+        nme_lst.append(a.text.strip())
+    #Return statement - commenting out code for part 1
+    return list(zip(bk_lst, nme_lst))
     
 
 def get_search_links():
