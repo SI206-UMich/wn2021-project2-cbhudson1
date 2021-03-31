@@ -49,7 +49,7 @@ def get_search_links():
     b = requests.get(web_link)
     soup = BeautifulSoup(b.content, 'html.parser')
     
-    #Add URL/link to new list
+    #Adding URL/link to new list
     
     link_lst = []
     table = soup.find('table', class_='tableList')
@@ -76,8 +76,15 @@ def get_book_summary(book_url):
     Make sure to strip() any newlines from the book title and number of pages.
     """
 
-    pass
-
+    req = requests.get(book_url)
+    soup = BeautifulSoup(r.content, 'html.parser')
+    bk_ttl = soup.find("h1", class_="gr-h1 gr-h1--serif")
+    ttl = bk_ttl.text.strip()
+    ath_1 = soup.find('a', class_='authorName')
+    athr = ath_1.text.strip()
+    pg_1 = soup.find('span', itemprop = 'numberOfPages')
+    pgs = pg_1.text.strip()
+    num_pgs = int(pgs.split()[0])
 
 def summarize_best_books(filepath):
     """
