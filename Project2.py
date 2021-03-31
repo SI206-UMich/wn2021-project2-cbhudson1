@@ -21,19 +21,23 @@ def get_titles_from_search_results(filename):
     #Get titles code start
     with open(filename) as a:
         soup = BeautifulSoup(a, 'html.parser')
+    
     #For books and authors
     bk = soup.find_all('a', class_='bookTitle')
     bk_lst = []
     athr_nme = soup.find_all('a', class_='authorName')
     nme_lst = []
+    
     #For loops
-    for a in bk:
-        bk_lst.append(a.text.strip())
-    for a in athr_nme:
-        nme_lst.append(a.text.strip())
+    for b in bk:
+        bk_lst.append(b.text.strip())
+    for b in athr_nme:
+        nme_lst.append(b.text.strip())
+    
     #Return statement - commenting out code for part 1
     return list(zip(bk_lst, nme_lst))
     
+    #Get titles from results completion
 
 def get_search_links():
     """
@@ -48,22 +52,21 @@ def get_search_links():
     “https://www.goodreads.com/book/show/kdkd".
 
     """
-    web_link = 'https://www.goodreads.com/search?q=fantasy&qid=NwUsLiA2Nc'
-    b = requests.get(web_link)
-    soup = BeautifulSoup(b.content, 'html.parser')
+    #Parser/retrieve object creation
+    web_link = requests.get('https://www.goodreads.com/search?q=fantasy&qid=NwUsLiA2Nc')
+    soup = BeautifulSoup(web_link.text, 'html.parser')
     
     #Adding URL/link to new list
-    
+    bks = soup.find_all('tr')
     link_lst = []
-    table = soup.find('table', class_='tableList')
-    c = table.find_all('tr')
-    for row in c[:10]:
-        inf = row.find_all('td')
-        link = inf[0].find('a')
-        html = "https://www.goodreads.com" + str(link['href'])
-        link_lst.append(html)
-    return link_lst
-
+    for b in bks:
+        c = b.find('a')
+        complete = c['href']
+        url = "https://goodreads.com" + str(complete)
+    link_lst.append(url)
+    return link_lst[:10]
+   
+   #Get search part completion
 
 def get_book_summary(book_url):
     """
@@ -79,21 +82,22 @@ def get_book_summary(book_url):
     Make sure to strip() any newlines from the book title and number of pages.
     """
 
-    req = requests.get(book_url)
-    soup = BeautifulSoup(r.content, 'html.parser')
-    bk_ttl = soup.find("h1", class_="gr-h1 gr-h1--serif")
-    ttl = bk_ttl.text.strip()
+    #Get book summary through url
+    web_link = requests.get(book_url)
+    soup = BeautifulSoup(web_link.text, 'html.parser')
 
-    ath_1 = soup.find('a', class_='authorName')
-    athr = ath_1.text.strip()
-    pg_1 = soup.find('span', itemprop = 'numberOfPages')
-    pgs = pg_1.text.strip()
-    num_pgs = int(pgs.split()[0])
+    #Capture book title and info (header of pages)
+    bk_title = soup.find('h1').text
+    athr = soup.find('a', class_='authorName').text
+    web_pgs = soup.find('span', itemprop = 'numberOfPages').text
+    web_pgs = web_pgs.strip()
+    web_pgs = web_pgs[:-5]
 
-    athr = soup.find('span', itemprop = 'name')
-    athr_txt = athr_txt.strip()
+    #Return book, title, page number
+    return (str(bk_title.strip()), str(athr), int(web_pgs))
 
-    bk_inf = (ti)
+    #Get book search completion
+
 
 def summarize_best_books(filepath):
     """
@@ -106,8 +110,29 @@ def summarize_best_books(filepath):
     ("Fiction", "The Testaments (The Handmaid's Tale, #2)", "https://www.goodreads.com/choiceawards/best-fiction-books-2020") 
     to your list of tuples.
     """
-    pass
+    #Summarize best book function list creation
+    file_1 = filepath
+    #Open file/close file
+    d = open(file_1)
+    soup = BeautifulSoup(d.read(), 'html.parser')
+    r.close()
 
+    #List category creation
+    anc = soup.find_all('div', class_='category clearFix')
+    total_lst = []
+
+    #For loop progression (displayed is variable progression through alphabet)
+    for b in anc:
+        e = b.find('a')
+        f = b.find('img', class_='category__winnerImage')
+        bk_ctg = e.find('h4').text
+        bk_html = e['href']
+        bk_title = f['alt']
+
+        total_lst.append((str(bk_ctg.strip()), str(bk_html), str(bk_title)))
+
+    #Return total_lst and three elements within it
+    return total_lst
 
 def write_csv(data, filename):
     """
@@ -129,7 +154,7 @@ def write_csv(data, filename):
 
     This function should not return anything.
     """
-    pass
+    
 
 
 def extra_credit(filepath):
