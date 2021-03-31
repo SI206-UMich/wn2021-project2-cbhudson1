@@ -1,4 +1,5 @@
 #Name: Chris Hudson
+
 #U-M ID: 16222729
 
 from bs4 import BeautifulSoup
@@ -17,20 +18,12 @@ def get_titles_from_search_results(filename):
 
     [('Book title 1', 'Author 1'), ('Book title 2', 'Author 2')...]
     """
-    link = filename
-    rsp = requests.get(link)
-    soup = BeautifulSoup(rsp.content, 'html.parser')
-    aths = soup.find_all('a', class_="authorName")
-    titles = soup.find_all('a', class_="bookTitle")
-
-    new_Authors = []
-    new_Titles = []
-    for element in titles:
-        new_Titles.append(element.strip())
-    for element in aths:
-        new_Authors.append(element.strip())
-    lst1 = list(zip(new_Titles, new_Authors))
-    return lst1
+    #Get titles code start
+    with open(filename) as a:
+        soup = BeautifulSoup(a, 'html.parser')
+    #Tuple for books
+    bk = soup.find_all('a')
+    
 
 def get_search_links():
     """
@@ -80,11 +73,17 @@ def get_book_summary(book_url):
     soup = BeautifulSoup(r.content, 'html.parser')
     bk_ttl = soup.find("h1", class_="gr-h1 gr-h1--serif")
     ttl = bk_ttl.text.strip()
+
     ath_1 = soup.find('a', class_='authorName')
     athr = ath_1.text.strip()
     pg_1 = soup.find('span', itemprop = 'numberOfPages')
     pgs = pg_1.text.strip()
     num_pgs = int(pgs.split()[0])
+
+    athr = soup.find('span', itemprop = 'name')
+    athr_txt = athr_txt.strip()
+
+    bk_inf = (ti)
 
 def summarize_best_books(filepath):
     """
