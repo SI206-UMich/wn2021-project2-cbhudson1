@@ -118,7 +118,7 @@ def summarize_best_books(filepath):
     #Open file/close file
     d = open(file_1)
     soup = BeautifulSoup(d.read(), 'html.parser')
-    r.close()
+    d.close()
 
     #List category creation
     anc = soup.find_all('div', class_='category clearFix')
@@ -189,7 +189,7 @@ class TestCases(unittest.TestCase):
         # check that the variable you saved after calling the function is a list
         self.assertEqual(type(l_var), list)
         # check that each item in the list is a tuple
-        self.assertEqual(type(l_var([0]), tuple))
+        self.assertEqual(type(l_var[0]), tuple)
         # check that the first book and author tuple is correct (open search_results.htm and find it)
         self.assertEqual(l_var[0], ("Harry Potter and the Deathly Hallows (Harry Potter, #7)", "J.K. Rowling"))
         # check that the last title is correct (open search_results.htm and find it)
@@ -246,20 +246,28 @@ class TestCases(unittest.TestCase):
 
     def test_write_csv(self):
         # call get_titles_from_search_results on search_results.htm and save the result to a variable
-
+        l_var = get_titles_from_search_results("search_results.htm")
         # call write csv on the variable you saved and 'test.csv'
-
+        write_csv(l_var, 'test.csv')
         # read in the csv that you wrote (create a variable csv_lines - a list containing all the lines in the csv you just wrote to above)
-
-
+        
+        file = open('test.csv', 'r')
+        csv_l = file.readlines()
+        csv_l = []
+        file.close()
+        for l in csv_l:
+            l = l.rstrip()
+            csv_l.append(l)
+        
+        print(csv_l)
         # check that there are 21 lines in the csv
-
+        self.assertEqual(len(csv_l), 21)
         # check that the header row is correct
-
+        self.assertEqual(csv_l[0], 'Book Title, Author Name')
         # check that the next row is 'Harry Potter and the Deathly Hallows (Harry Potter, #7)', 'J.K. Rowling'
-
+        self.assertEqual(csv_l[1], '"Harry Potter and the Deathly Hallows (Harry Potter, #7)" , "J.K. Rowling" ')
         # check that the last row is 'Harry Potter: The Prequel (Harry Potter, #0.5)', 'J.K. Rowling'
-
+        self.assertEqual(csv_l[-1], " 'Harry Potter: The Prequel (Harry Potter, #0.5)', 'J.K. Rowling' ") 
 
 
 if __name__ == '__main__':
