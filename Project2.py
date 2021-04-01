@@ -134,6 +134,7 @@ def summarize_best_books(filepath):
     #Return total_lst and three elements within it
     return total_lst
 
+    #Summarize best book section completion
 def write_csv(data, filename):
     """
     Write a function that takes in a list of tuples (called data, i.e. the
@@ -154,7 +155,12 @@ def write_csv(data, filename):
 
     This function should not return anything.
     """
-    
+    #Take list of tuples, write and save to file
+    with open(filename, 'w', newline = '') as file:
+        f_write = csv.writer(file)
+        f_write.writerow(["Book Title", "Author Name"])
+        for b in data:
+            f_write.writerow(b)
 
 
 def extra_credit(filepath):
