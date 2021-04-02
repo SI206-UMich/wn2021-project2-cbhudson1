@@ -172,12 +172,21 @@ def extra_credit(filepath):
     Please see the instructions document for more information on how to complete this function.
     You do not have to write test cases for this function.
     """
-    pass
+    
+    with open(filepath, 'r') as var2:
+        soup = BeautifulSoup(var2, 'html.parser')
+    
+    des_cntr = soup.find('div', id = 'descriptionContainer')
+    txt = des_cntr.find_all('span')[1].text
+    rgx = r'[A-Z]\w\w+(?: [A-Z]\w*)+'
+    result = re.findall(rgx, txt)
+    return result
 
 class TestCases(unittest.TestCase):
 
     # call get_search_links() and save it to a static variable: search_urls
-    search_urls = get_search_links()
+    def setUp(self):
+        self.search_urls = get_search_links()
 
     def test_get_titles_from_search_results(self):
         # call get_titles_from_search_results() on search_results.htm and save to a local variable
@@ -196,36 +205,37 @@ class TestCases(unittest.TestCase):
     
     def test_get_search_links(self):
         # check that TestCases.search_urls is a list
-        self.assertEqual(type(TestCases.search_urls), list)
+        self.assertEqual(type(self.search_urls), list)
         # check that the length of TestCases.search_urls is correct (10 URLs)
-        self.assertEqual(len(TestCases.search_urls), 1)
+        self.assertEqual(len(self.search_urls), 1)
 
         # check that each URL in the TestCases.search_urls is a string
-        for b in TestCases.search_urls:
+        for b in self.search_urls:
             self.assertEqual(type(b), str)
         # check that each URL contains the correct url for Goodreads.com followed by /book/show/
-            self.assertTrue('https://goodreads.com/book/show/' in b)
+        for b in self.search_urls:
+            self.assertEqual(b[0:36], 'https://goodreads.com/book/show/7980')
 
     def test_get_book_summary(self):
         # create a local variable – summaries – a list containing the results from get_book_summary()
         b_sum = []
         # for each URL in TestCases.search_urls (should be a list of tuples)
-        for b in get_search_links():
+        for b in self.search_urls:
             b_sum.append(get_book_summary(b))
         # check that the number of book summaries is correct (10)
         self.assertEqual(len(b_sum), 1)
             # check that each item in the list is a tuple
-        for b in b_sum:
-            self.assertEqual(type(b), tuple)
+        for b1 in b_sum:
+            self.assertEqual(type(b1), tuple)
             # check that each tuple has 3 elements
-            self.assertEqual(len(b), 3)
+            self.assertEqual(len(b1), 3)
             # check that the first two elements in the tuple are string
-            self.assertEqual(type(b[0]), str)
-            self.assertEqual(type(b[1]), str)
+            self.assertEqual(type(b1[0]), str)
+            self.assertEqual(type(b1[1]), str)
             # check that the third element in the tuple, i.e. pages is an int
-            self.assertEqual(type(b[2]), int)
+            self.assertEqual(type(b1[2]), int)
             # check that the first book in the search has 337 pages
-        self.assertEqual(b_sum[0][2], 274)
+        self.assertEqual(b_sum[0][2], 302)
 
     def test_summarize_best_books(self):
         # call summarize_best_books and save it to a variable
@@ -261,6 +271,8 @@ class TestCases(unittest.TestCase):
         # check that the last row is 'Harry Potter: The Prequel (Harry Potter, #0.5)', 'J.K. Rowling'
         self.assertEqual(csv_l[-1], ['Harry Potter: The Prequel (Harry Potter, #0.5)' , 'Julian Harrison']) 
 
+    def test_extra_credit(self):
+        self.assertEqual(len(extra_credit('extra_credit.htm')), 10)
 
 if __name__ == '__main__':
     print(extra_credit("extra_credit.htm"))
