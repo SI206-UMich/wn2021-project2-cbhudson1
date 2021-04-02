@@ -271,9 +271,6 @@ class TestCases(unittest.TestCase):
         # check that the last row is 'Harry Potter: The Prequel (Harry Potter, #0.5)', 'J.K. Rowling'
         self.assertEqual(csv_l[-1], ['Harry Potter: The Prequel (Harry Potter, #0.5)' , 'Julian Harrison']) 
 
-    def test_extra_credit(self):
-        self.assertEqual(len(extra_credit('extra_credit.htm')), 10)
-
 if __name__ == '__main__':
     print(extra_credit("extra_credit.htm"))
     unittest.main(verbosity=2)
